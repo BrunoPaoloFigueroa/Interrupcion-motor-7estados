@@ -4,6 +4,7 @@
 #include <util/delay.h>
 char comando=0;
 char pos=0;
+char po=0;
 
 void config_PCI(void){
 
@@ -11,46 +12,26 @@ void config_PCI(void){
       PCMSK2 |= 0x0E;             
 
       DDRD &= ~(0x0E);            
-      PORTD |= 0x0E;              
-
-      
+      PORTD |= 0x0E;       
+ 
 
 }
 
 
 ISR(PCINT2_vect) {
-  char entrada=PIND&0X0E;
-  _delay_ms(100);
-  switch (entrada) {
-    case 0x02:              
-        comando = 0x02;
-        break;
-    case 0x04:             
-        comando = 0x04;
-        break;
-    case 0x06:          
-        comando = 0x06;
-        break;
-    case 0x08:           
-        comando = 0x08;
-        break;
-    case 0x0A:             
-        comando = 0x0A;
-        break;
-    case 0x0C:              
-        comando = 0x0C;
-        break;
-    case 0x0E:              
-        comando = 0x0E;
-        break;
-    default:
-        break;
+  unsigned char entrada = (PIND & 0x0E);
+if(entrada!=0x0E){
+  _delay_ms(50);
+  
+      comando = entrada;  
+ 
+
 }
 }
 
-void tarea(char t){
+void tarea(char b){
 
-  switch (t){
+  switch (b){
 
       
 
@@ -138,14 +119,18 @@ void tarea(char t){
 
 }
 
+
+
+
 int main(void){
     DDRD |= 0xF0;  
     PORTD &= ~(0xF0);
     config_PCI();
     sei();    
     while(1){
-      tarea(comando);
-      _delay_ms(500);
+     tarea(comando);
+     _delay_ms(50);
+ 
     }
   
 }
